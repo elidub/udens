@@ -19,6 +19,13 @@ cd ~/swyft
 git checkout -b lightning_with_hydra 38f15af
 ```
 
+One should also install some extra things, these should be transfered to the `setup.cfg`
+```
+pip install jupyter
+pip install hydra-core --upgrade
+pip install torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+```
+
 ## Background
 Ongoing notes of the math are on Overleaf (see Slack for link)
 
