@@ -1,0 +1,8 @@
+pyproject.toml
+setup.cfg
+setup.py
+udens.egg-info/PKG-INFO
+udens.egg-info/SOURCES.txt
+udens.egg-info/dependency_links.txt
+udens.egg-info/requires.txt
+udens.egg-info/top_level.txt
