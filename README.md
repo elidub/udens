@@ -21,6 +21,6 @@ git checkout -b lightning_with_hydra 38f15af
 ```
 
 ## Background
-Ongoing notes of the math are on [Overleaf](https://www.overleaf.com/project/624bff9f26e3a2a309468557)
+Ongoing notes of the math are on Overleaf (see Slack for link)
 
 
