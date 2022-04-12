@@ -154,6 +154,7 @@ class ModelBlobs_uniform(sl.SwyftModel):
     sigma_n: float = 0.25
     # Initial prior range
     nsub_bound: Array = np.array([0, 5])
+    nsub_expect: float = 0.25
     grid_low: Array = np.array([10.0, -2.5, -2.5])
     grid_high: Array = np.array([11.0, 2.5,  2.5])
     # True params for mock data generation

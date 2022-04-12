@@ -31,9 +31,6 @@ def lavalamp(post, obs, grid_coords, grid_low, grid_high):
     z_low = grid_low[0]-1 if grid_low[0] == grid_high[0] else grid_low[0]
     z = np.ones(im.shape) * z_low
     
-    print(grid_low[0], grid_high[0], grid_low[0] == grid_high[0])
-    
-    
 
     fig = make_subplots(rows=1, cols=2,
                         specs=[[{'is_3d': True}, {'is_3d': True}]],

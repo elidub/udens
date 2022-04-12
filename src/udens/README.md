@@ -1,15 +1,16 @@
-# `subN`
+# `udens`
 
 To infer the posteriors of (x,y,M) pixels with image segmentation (ImgSeg).
 
 - `__init__.py` contains `ImgSegmNetwork`, the setup of the ImgSegm network. It does not use the standard swyft classifiers. 
+- `bounds.py` some start for bounding, but it is not up to date currenntly
 - `classifier.py`: the custom classifiers designed for UNet.
-- `unet.py`: only the actual neural network
-
-Files below should be placed somewhere else, but I didn't what a good location would be
 - `inference.py`: the custom inference for the UNet predictions
-- `logging_utils_subN.py`: custom plotting of the inference
+- `interpret.py`: necessities for calibration and observations 
+- `lavalamp.py`: plot function to plot the nice lavalamp
+- `log.py`: custom plotting of the inference in tensorboard
 - `plot.py` function that plots multiple `plt.imshow` easy
+- `unet.py`: only the actual neural network
 
 To do:
 - `DEVICE = 'cuda'` is all over the place, should be initiated in model classes.

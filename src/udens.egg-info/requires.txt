@@ -1,0 +1,7 @@
+jupyter
+matplotlib
+numpy
+tqdm
+torch
+plotly
+pytorch_lightning

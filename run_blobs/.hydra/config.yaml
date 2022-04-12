@@ -1,37 +1,39 @@
-# SWYFT Lightning configuration script - using Hydra
-hydra:
-  run:
-    dir: ./
 tensorboard:
-  save_dir: ./lightning_logs_blobs #_train${simulation.store.train_size}
+  save_dir: ./lightning_logs_blobs
   name: uniform_noise${simulation.model.sigma_n}_sub${simulation.model.nsub_bound[0]}-${simulation.model.nsub_bound[1]}_m${simulation.model.grid_low[0]}-${simulation.model.grid_high[0]}_pix${simulation.model.n_pix}_msc${estimation.network.n_msc}_sim${simulation.store.train_size}
   version: 0
-load: True # set True to load in stead of analyse
-testload: False # set True to load test posteriors in stead of calculating them
+load: false
+testload: false
 simulation:
   model:
     _target_: udens.models.model.ModelBlobs_uniform
     n_pix: 40
-    nsub_bound: [1, 1]
-    nsub_expect: 1.
-    grid_low:  [9., -2.5, -2.5]
-    grid_high: [10., 2.5,  2.5]
+    nsub_bound:
+    - 1
+    - 1
+    nsub_expect: 1.0
+    grid_low:
+    - 9.0
+    - -2.5
+    - -2.5
+    grid_high:
+    - 10.0
+    - 2.5
+    - 2.5
     sigma_n: 0.0
-    bounds:
-      # _target_: bounds.TorchBounds
-      # filename: ...
+    bounds: null
   store:
     path: /nfs/scratch/eliasd/udens/Blobs_uniform_sim${simulation.store.store_size}_sub${simulation.model.nsub_bound[0]}-${simulation.model.nsub_bound[1]}_m${simulation.model.grid_low[0]}-${simulation.model.grid_high[0]}_pix${simulation.model.n_pix}.pt
-    train_size: 10_000
-    store_size: 10_000
+    train_size: 10000
+    store_size: 10000
 estimation:
   network:
     _target_: udens.ImgSegmNetwork
     n_msc: 2
-  hparams:
+  hparams: null
   optimizer:
     _target_: torch.optim.Adam
-    lr: 1.e-4
+    lr: 0.0001
   lr_scheduler:
     _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
     patience: 5
@@ -40,12 +42,10 @@ estimation:
   batch_size: 16
   max_epochs: 5
   early_stopping:
-    min_delta: 0.
+    min_delta: 0.0
     patience: 10
   num_workers: 4
 inference:
   interpreter:
     _target_: interpreter.interpret
-  n_infer: 1_000
-
-  # bound: ./bound.pt
+  n_infer: 1000

@@ -1,0 +1,16 @@
+[2022-04-12 18:08:28,613][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmpfowpfc9b
+[2022-04-12 18:08:28,614][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmpfowpfc9b/_remote_module_non_sriptable.py
+[2022-04-12 18:10:16,858][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmpgect19ej
+[2022-04-12 18:10:16,858][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmpgect19ej/_remote_module_non_sriptable.py
+[2022-04-12 18:11:02,637][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmp6vs1bf5d
+[2022-04-12 18:11:02,638][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmp6vs1bf5d/_remote_module_non_sriptable.py
+[2022-04-12 18:47:54,527][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmpm5v26bz5
+[2022-04-12 18:47:54,528][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmpm5v26bz5/_remote_module_non_sriptable.py
+[2022-04-12 18:48:49,882][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmpm38ist0m
+[2022-04-12 18:48:49,883][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmpm38ist0m/_remote_module_non_sriptable.py
+[2022-04-12 18:52:10,630][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmpbr_6l7fg
+[2022-04-12 18:52:10,630][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmpbr_6l7fg/_remote_module_non_sriptable.py
+[2022-04-12 18:53:37,899][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmpvh8e962y
+[2022-04-12 18:53:37,900][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmpvh8e962y/_remote_module_non_sriptable.py
+[2022-04-12 18:57:47,428][torch.distributed.nn.jit.instantiator][INFO] - Created a temporary directory at /scratch/tmpwvcuxgcz
+[2022-04-12 18:57:47,429][torch.distributed.nn.jit.instantiator][INFO] - Writing /scratch/tmpwvcuxgcz/_remote_module_non_sriptable.py
