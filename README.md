@@ -5,8 +5,6 @@
   - `src/udens/models` contains the simulators
 - `run_blobs` does the simulating, analysing and interpreting with swyft-lightning
 
-@Christopher: I propose that you make a new folder very similar to `run_blobs` where you analyze your model which is inside `src/udens/models`
-
 ## Installation
 ```
 git clone https://github.com/elidub/udens.git
