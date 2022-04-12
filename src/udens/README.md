@@ -1,6 +1,6 @@
 # `udens`
 
-To infer the posteriors of (M,x,y) pixels with image segmentation (ImgSeg). Please note that this is written for (M,x,y) analysis in the `pyrofit-lensing` pipeline! It has not been rewritten for generalizations. ** So please make heavy changes for generalizations!**
+To infer the posteriors of (M,x,y) pixels with image segmentation (ImgSeg). Please note that this is written for (M,x,y) analysis in the `pyrofit-lensing` pipeline! It has not been rewritten for generalizations. **So please make heavy changes for generalizations!**
 
 ## Structure
 - `models` containing the simulator to model.
