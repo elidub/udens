@@ -6,7 +6,7 @@ tensorboard:
   save_dir: ./lightning_logs_blobs #_train${simulation.store.train_size}
   name: uniform_noise${simulation.model.sigma_n}_sub${simulation.model.nsub_bound[0]}-${simulation.model.nsub_bound[1]}_m${simulation.model.grid_low[0]}-${simulation.model.grid_high[0]}_pix${simulation.model.n_pix}_msc${estimation.network.n_msc}_sim${simulation.store.train_size}
   version: 0
-load: True # set True to load in stead of analyse
+load: False # set True to load in stead of analyse
 testload: False # set True to load test posteriors in stead of calculating them
 simulation:
   model:
