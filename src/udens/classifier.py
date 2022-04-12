@@ -10,7 +10,6 @@ from swyft.lightning import equalize_tensors, RatioSamples
 from .unet import UNET
 
 from .plot import plt_imshow
-imkwargs = dict(extent=(-2.5, 2.5, -2.5, 2.5), origin='lower') #left, right, bottom, top
 
 
 DEVICE = 'cuda'
@@ -75,47 +74,32 @@ class MarginalClassifierUNet(torch.nn.Module):
 
         if not x.is_cuda: x = x.to(DEVICE) # this should be fixed, why are there inputs not on cuda?
             
-#         x1 = torch.sigmoid(x)
-#         x2 = x1 / self.prior_grid
-#         x3 = torch.log(x2)
-
-        r = torch.exp(x)
-        posts = r * self.prior_grid
         
-        post_sum = torch.sum(posts, axis = 1) # Sum p(z=0|x) + p(z=1|x) for each pixel
+        ### Some discutable normalisation ###
+#         r = torch.exp(x)
+#         posts = r * self.prior_grid
         
-        epsilon = torch.finfo(x.dtype).tiny
-        post_sum[post_sum == 0.] = epsilon # because we don't want to devie by zero
-        posts[posts == torch.inf] = 1.
+#         post_sum = torch.sum(posts, axis = 1) # Sum p(z=0|x) + p(z=1|x) for each pixel
+        
+#         epsilon = torch.finfo(x.dtype).tiny
+#         post_sum[post_sum == 0.] = epsilon # because we don't want to devie by zero
+#         posts[posts == torch.inf] = 1.
         
         
-        post_sum = torch.stack((post_sum, post_sum), dim = 1)
-        post_norm = posts / post_sum # Normalize p(z=1|x)
+#         post_sum = torch.stack((post_sum, post_sum), dim = 1)
+#         post_norm = posts / post_sum # Normalize p(z=1|x)
         
-        nansum = torch.isnan(post_norm).sum()
-        if nansum > 0: print('post_norm', nansum)
+#         nansum = torch.isnan(post_norm).sum()
+#         if nansum > 0: print('post_norm', nansum)
         
-        r2 = post_norm / self.prior_grid
+#         r2 = post_norm / self.prior_grid
         
-        x = torch.log(r2)
+#         x = torch.log(r2)
         
-#         x = x3
-
-#         if np.random.randint(20) == 1:
-#             x = torch.sigmoid(x)
-#             x = x / self.prior_grid
-#             x = torch.log(x)
-        
-#             print(x.max(), x.min())
-            
-#             plt.hist(x.flatten().cpu().detach().numpy())
-#             plt.show()
-#             assert 1 == 2
         
         x = x * target_map # the mapping L[C], shape: batch, 2, *grid_dim = batch, 2, n_msc, n_pix, n_pix        
         x = torch.sum(x, axis = 1) # sum so that we consider only the correct logratio
         
-#         plt_imshow(x[0].cpu(), cbar = True, **imkwargs)
         
         return x
 

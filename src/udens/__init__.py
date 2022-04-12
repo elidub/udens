@@ -27,7 +27,7 @@ class ImgSegmNetwork(sl.SwyftModule):
         
         grid_dim = torch.tensor([n_msc, n_pix, n_pix], device = DEVICE)
         
-        n_sub_expect = 2.5
+        n_sub_expect = cfg.n_sub_expect
         prior_grid = Prior(n_sub_expect, n_pix, n_msc, grid_low, grid_high, None).prior_grid()
         
        

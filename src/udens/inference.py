@@ -197,25 +197,3 @@ class Infer(Prior):
         targets = torch.cat(targets).cpu()
 #         posts_norm, posts_unnorm, targets = self.drop_nan_posts(posts_norm, posts_unnorm, targets)
         return posts_norm, posts_unnorm, targets
-    
-    def get_posts_from_sims(self, simulations, max_n_test):
-        """
-        Calculates the N = max_n_test posteriors from the dataloader observations.      
-        """
-        n_dataset = len(simulations)
-        max_n_test = max_n_test if max_n_test <= n_dataset else n_dataset # Maximum number of prediction we want to
-        batch_size = self.datamodule.batch_size
-#         max_n_test_batch = max_n_test // self.datamodule.batch_size + 1   # Corresponding number of batches we want to do
-
-        posts, targets = [], []
-        
-        for batch_idx in tqdm(range(int(np.ceil(max_n_test / batch_size))), desc='Calculating posteriors'):
-            i, j = batch_idx*batch_size, (batch_idx+1)*batch_size
-            s_batch = simulations[i:j]
-        
-            posts.append(  self.get_post(s_batch) )
-            targets.append( self.network.classifier.paramtrans(s_batch['z_sub'].to(DEVICE)) )
-        posts = torch.cat(posts)
-        targets = torch.cat(targets)
-#         posts, targets = self.drop_nan_posts(posts, targets)
-        return posts, targets
