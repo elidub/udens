@@ -4,6 +4,7 @@
 - `src/udens` contains all the code that do the classification/inference
   - `src/udens/models` contains the simulators
 - `run_blobs` does the simulating, analysing and interpreting with swyft-lightning
+- TO DO: `run_pointsource` a folder very similar to `run_blobs` but for pointsources.
 
 ## Installation
 ```
