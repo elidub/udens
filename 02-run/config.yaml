@@ -1,0 +1,49 @@
+# SWYFT Lightning configuration script - using Hydra
+hydra:
+  run:
+    dir: ./
+tensorboard:
+  save_dir: ./lightning_logs #_train${simulation.store.train_size}
+  name: noise${simulation.model.sigma_n}_sub${simulation.model.n_sub}_m${simulation.model.grid_low[0]}-${simulation.model.grid_high[0]}_pix${simulation.model.n_pix}_msc${estimation.network.n_msc}_sim${simulation.store.train_size}
+  version: 
+simulation:
+  model:
+    _target_: lensx.swyft_models.ModelSubN
+    n_pix: 80
+    n_sub: 4
+    grid_low:  [8., -2.5, -2.5]
+    grid_high: [9.5,  2.5,  2.5]
+    sigma_n: 0.25
+    bounds:
+      # _target_: bounds.TorchBounds
+      # filename: ...
+  store:
+    path: /nfs/scratch/eliasd/lightning2/subN_sim${simulation.store.store_size}_sub${simulation.model.n_sub}_m${simulation.model.grid_low[0]}--${simulation.model.grid_high[0]}_pix${simulation.model.n_pix}.pt
+    train_size: 1_000
+    store_size: 1_000
+estimation:
+  network:
+    _target_: lensx.nn.subN.ImgSegmNetwork
+    n_msc: 1
+  hparams:
+  optimizer:
+    _target_: torch.optim.Adam
+    lr: 1.e-4
+  lr_scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    patience: 100
+    factor: 0.1
+  accelerator: gpu
+  batch_size: 16
+  max_epochs: 10
+  early_stopping:
+    min_delta: 0.
+    patience: 10
+  num_workers: 4
+inference:
+  interpreter:
+    _target_: interpreters.interpret
+  obs_path: ./mocks/mock-ModelSubN_noise${simulation.model.sigma_n}_sub${simulation.model.n_sub}_m${simulation.model.grid_low[0]}-${simulation.model.grid_high[0]}_pix${simulation.model.n_pix}.pt
+  n_infer: 10
+
+  # bound: ./bound.pt

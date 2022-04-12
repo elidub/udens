@@ -7,9 +7,9 @@ from matplotlib import pyplot as plt
 
 
 from swyft.lightning import equalize_tensors, RatioSamples
-from lensx.nn.subN.unet import UNET
+from .unet import UNET
 
-from lensx.nn.subN.plot import plt_imshow
+from .plot import plt_imshow
 imkwargs = dict(extent=(-2.5, 2.5, -2.5, 2.5), origin='lower') #left, right, bottom, top
 
 

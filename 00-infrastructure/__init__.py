@@ -5,7 +5,7 @@ import swyft.lightning as sl
 from swyft.networks import OnlineDictStandardizingLayer
 
 from .classifier import RatioEstimatorUNet
-from lensx.nn.subN.inference import Prior
+from .inference import Prior
 
 DEVICE = 'cuda'
 

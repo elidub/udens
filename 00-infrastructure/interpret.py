@@ -5,7 +5,7 @@ from sklearn.isotonic import IsotonicRegression
 
 from tqdm import tqdm
 
-from lensx.nn.subN.plot import plt_imshow#, plt_imshow_single
+from .plot import plt_imshow#, plt_imshow_single
 import scipy.ndimage as spi
 
 imkwargs = dict(extent=(-2.5, 2.5, -2.5, 2.5), origin='lower') #left, right, bottom, top

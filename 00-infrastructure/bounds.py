@@ -1,4 +1,4 @@
-from lensx.nn.subN.interpret import PostData, ObsData
+from .interpret import PostData, ObsData
 
 
 class GetBounds(ObsData):

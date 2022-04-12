@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 
-from lensx.nn.subN.plot import plt_imshow#, plt_imshow_single
-from lensx.nn.subN.interpret import PostData, ObsData
-from lensx.nn.subN.bounds import GetBounds
+from .plot import plt_imshow#, plt_imshow_single
+from .interpret import PostData, ObsData
+from .bounds import GetBounds
 import scipy.ndimage as spi
 
 
