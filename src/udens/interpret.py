@@ -20,29 +20,11 @@ class Alpha():
         self.alpha_edges = self.alpha_edges.to(DEVICE)
         self.alpha_centers = (self.alpha_edges[:-1] + self.alpha_edges[1:])/2
         
-class Alpha2():
-    def __init__(self, posts, prior, n_alpha_log = 50, n_alpha_normal = 50):
-        self.n_alpha_log = n_alpha_log
-        self.n_alpha_normal = n_alpha_normal
-        self.n_alpha = n_alpha_log + n_alpha_normal
-        
-        self.alpha_log    = torch.logspace(torch.log10(posts.min()), torch.log10(prior.min()), n_alpha_log)
-        self.alpha_normal = torch.linspace(prior.min(), posts.max(), n_alpha_normal)
-        self.alpha_edges = torch.cat((self.alpha_log, self.alpha_normal))
-        self.alpha_edges = self.alpha_edges.to(DEVICE)
-        self.alpha_centers = (self.alpha_edges[:-1] + self.alpha_edges[1:])/2
-    
-
 class PostData(Alpha):
     def __init__(self, posts, targets, n_alpha = 50):
         super().__init__(n_alpha = n_alpha)
         self.posts = posts.to(DEVICE)
         self.targets = targets.to(DEVICE)
-# class PostData(Alpha2):
-#     def __init__(self, posts, targets, prior, n_alpha = 50):
-#         super().__init__(posts, prior)
-#         self.posts = posts.to(DEVICE)
-#         self.targets = targets.to(DEVICE)
     
     def get_histogram(self):
         hist = torch.histogram(self.posts.flatten().cpu(), bins = self.alpha_edges.cpu())[0]

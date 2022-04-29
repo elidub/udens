@@ -13,7 +13,6 @@ def interpret(cfg, simulator, network, trainer, datamodule, tbl):
     logdir = tbl.experiment.get_logdir()
     
     # Calculate expected n_sub
-    Ms = datamodule.predict_dataloader().dataset[:]['z_sub'][:,:,0]
     n_sub_expect = cfg.simulation.model.nsub_expect #torch.mean(torch.tensor(np.count_nonzero(Ms.numpy(), axis  = 1), dtype = torch.float32))
     
     # Loading the inference class and 
@@ -27,12 +26,10 @@ def interpret(cfg, simulator, network, trainer, datamodule, tbl):
     # Simulations inference
     if cfg.testload:
         posts_norm = torch.load(os.path.join(logdir, 'posts_norm.pt'))
-        posts_unnorm = torch.load(os.path.join(logdir, 'posts_unnorm.pt'))
         targets       = torch.load(os.path.join(logdir, 'targets.pt'))
     else:
-        posts_norm, posts_unnorm, targets = infer.get_posts(datamodule.predict_dataloader(), cfg.inference.n_infer)
+        posts_norm, targets = infer.get_posts(cfg.inference.n_infer)
         torch.save(posts_norm, os.path.join(logdir, 'posts_norm.pt'))
-        torch.save(posts_unnorm, os.path.join(logdir, 'posts_unnorm.pt'))
         torch.save(targets, os.path.join(logdir,'targets.pt'))
     
     # Calibration
@@ -40,26 +37,16 @@ def interpret(cfg, simulator, network, trainer, datamodule, tbl):
     posts_norm_calib = irc_norm.calibrate(posts_norm)
     torch.save(posts_norm_calib, os.path.join(logdir, 'posts_norm_calib.pt'))
     
-    irc_unnorm = IsotonicRegressionCalibration(posts_unnorm, targets)    
-    posts_unnorm_calib = irc_unnorm.calibrate(posts_unnorm)
-    torch.save(posts_unnorm_calib, os.path.join(logdir, 'posts_unnorm_calib.pt'))
-    
-    
     # Log simulation inference
     LogPost(tbl, posts_norm, targets, title = 'norm_uncalib').plot_all()
     LogPost(tbl, posts_norm_calib, targets, title = 'norm_calib').plot_all()
     LogIRC(tbl, irc_norm, title = 'norm_calibration').plot()
     
-    LogPost(tbl, posts_unnorm, targets, title = 'unnorm_uncalib').plot_all()
-    LogPost(tbl, posts_unnorm_calib, targets, title = 'unnorm_calib').plot_all()
-    LogIRC(tbl, irc_unnorm, title = 'unnorm_calibration').plot()
-
-    
     # Single mock observation
     test_sim = simulator.sample(1) # Generate mock observation
     
     # Calculate the calibrated and normalized posterior of the mock observation
-    test_post_uncalib = infer.get_post(test_sim)[0] #[0] refers to normalized case
+    test_post_uncalib = infer.get_post(test_sim)
     test_sim = infer.squeeze_obs(test_sim)
     test_post = irc_norm.calibrate(test_post_uncalib.squeeze(0))
     

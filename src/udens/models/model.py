@@ -194,3 +194,6 @@ class ModelBlobs_uniform(sl.SwyftModel):
 
     def prior(self, N, bounds: Optional[sl.RectangleBound] = None):
         return self.prior_subN_uniform(N)
+    
+    def apply_afterburner(self, d):
+        return d

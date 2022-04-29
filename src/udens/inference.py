@@ -117,7 +117,7 @@ class Infer(Prior):
                  s0_copy[k] = np.squeeze(v, 0)
         return s0_copy
     
-    def drop_nan_posts(self, posts_norm, posts_unnorm, targets, batch_size = 16):
+    def drop_nan_posts(self, posts_norm, targets, batch_size = 16):
         nan_idxs = np.unique(np.argwhere(np.isnan(posts_norm.cpu()))[0])
 
         if len(nan_idxs) > 0:
@@ -126,29 +126,14 @@ class Infer(Prior):
             bool_idxs = torch.zeros_like(posts_norm, dtype = bool)
             bool_idxs[nan_idxs] = True
             
-#             posts_norm_without_nan = [] #torch.zeros_like(posts_norm, device = posts_norm.device)
-#             posts_unnorm_without_nan = [] #torch.zeros_like(posts_unnorm, device = posts_unnorm.device)
-#             targets_without_nan = [] #torch.zeros_like(targets, device = targets.device)
-            
-#             for batch_idx in tqdm(range(int(np.ceil(len(posts_norm) / batch_size))), desc='Removing NaN values'):
-#                 i, j = batch_idx*batch_size, (batch_idx+1)*batch_size
-                
-# #                 print(i, j, posts_norm_without_nan[i:j].shape, posts_norm[i:j].shape, bool_idxs[i:j].shape, posts_norm[i:j][~bool_idxs[i:j]].view(-1, self.n_msc, self.n_pix, self.n_pix).shape)
-                
-#                 posts_norm_without_nan.append( posts_norm[i:j][~bool_idxs[i:j]].view(-1, self.n_msc, self.n_pix, self.n_pix) )
-#                 posts_unnorm_without_nan.append( posts_unnorm[i:j][~bool_idxs[i:j]].view(-1, self.n_msc, self.n_pix, self.n_pix) )
-#                 targets_without_nan.append( targets[i:j][~bool_idxs[i:j]].view(-1, self.n_msc, self.n_pix, self.n_pix))
-            
-#             posts = posts[~bool_idxs].view(-1, self.n_msc, self.n_pix, self.n_pix)
             posts_norm = posts_norm[~bool_idxs].view(-1, self.n_msc, self.n_pix, self.n_pix)
-            posts_unnorm = posts_unnorm[~bool_idxs].view(-1, self.n_msc, self.n_pix, self.n_pix)
             targets = targets[~bool_idxs].view(-1, self.n_msc, self.n_pix, self.n_pix)
 
 #             return torch.cat(posts_norm_without_nan), torch.cat(posts_unnorm_without_nan), torch.cat(targets_without_nan)
-            return posts_norm, posts_unnorm, targets
+            return posts_norm, targets
 
         else:
-            return posts_norm, posts_unnorm, targets
+            return posts_norm, targets
     
     def get_post(self, s0):
         """
@@ -175,25 +160,28 @@ class Infer(Prior):
         posts = posts.cpu()
         post_sum = torch.sum(posts, axis = 1) # Sum p(z=0|x) + p(z=1|x) for each pixel
         post_norm = posts[:,1] / post_sum # Normalize p(z=1|x)
-        posts_unnorm = posts[:,1]
-        return post_norm, posts_unnorm
+        return post_norm
     
-    def get_posts(self, dataloader, max_n_test):
+    def get_posts(self, max_n_test):
         """
         Calculates the N = max_n_test posteriors from the dataloader observations.      
         """
-        n_dataset = len(dataloader.dataset)
+        dataset = self.datamodule.dataset
+        
+        n_dataset = len(dataset)
         max_n_test = max_n_test if max_n_test <= n_dataset else n_dataset # Maximum number of prediction we want to
-        max_n_test_batch = max_n_test // self.datamodule.batch_size + 1   # Corresponding number of batches we want to do
+        batch_size = self.datamodule.batch_size
 
         posts_norm, posts_unnorm, targets = [], [], []
-        for _, s_batch in tqdm(zip(range(max_n_test_batch), dataloader), total = max_n_test_batch, desc='Calculating posteriors'):
-            post_norm, post_unnorm = self.get_post(s_batch)
+        
+        for batch_idx in tqdm(range(int(np.ceil(max_n_test / batch_size))), desc='Calculating posteriors'):
+            i, j = batch_idx*batch_size, (batch_idx+1)*batch_size
+            s_batch = dataset[i:j]
+        
+            post_norm = self.get_post(s_batch)
             posts_norm.append( post_norm )
-            posts_unnorm.append( post_unnorm )
             targets.append( self.network.classifier.paramtrans(s_batch['z_sub'].to(DEVICE)) )
         posts_norm = torch.cat(posts_norm)
-        posts_unnorm = torch.cat(posts_unnorm)
         targets = torch.cat(targets).cpu()
-#         posts_norm, posts_unnorm, targets = self.drop_nan_posts(posts_norm, posts_unnorm, targets)
-        return posts_norm, posts_unnorm, targets
+        posts_norm, targets = self.drop_nan_posts(posts_norm, targets)
+        return posts_norm, targets
