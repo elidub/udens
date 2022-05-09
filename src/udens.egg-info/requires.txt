@@ -4,4 +4,6 @@ numpy
 tqdm
 torch
 plotly
-pytorch_lightning
+pyfftw
+powerbox
+astropy

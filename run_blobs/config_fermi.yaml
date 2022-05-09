@@ -5,7 +5,7 @@ hydra:
 tensorboard:
   save_dir: ./lightning_fermi #_train${simulation.store.train_size}
   name: poisson_noise_sub${simulation.model.N_SH_bound[0]}-${simulation.model.N_SH_bound[1]}_GLON${simulation.model.GLON_center}_GLAT${simulation.model.GLAT_center}_ROI${simulation.model.ROI_size}x${simulation.model.ROI_size}deg_pix${simulation.model.n_pix}_Ebins${simulation.model.N_E}_msc${estimation.network.n_msc}_sim${simulation.store.train_size}
-  version: 3
+  version: 0
 load: False # set True to load in stead of analyse
 testload: False # set True to load test posteriors in stead of calculating them
 simulation:
@@ -15,7 +15,7 @@ simulation:
     GLON_center: 0.0
     GLAT_center: 0.0
     ROI_size: 40.0
-    N_E: 1
+    N_E: 4
     E_min: 1.0
     E_max: 5.0
     N_SH_bound: [1, 5]
@@ -26,9 +26,10 @@ simulation:
       # _target_: bounds.TorchBounds
       # filename: ...
   store:
-    path: /Users/christopher/Documents/SBI-swyft-DMsubhalo-toymodel/udens/Fermi_uniform_SHMF_sim${simulation.store.store_size}_sub${simulation.model.N_SH_bound[0]}-${simulation.model.N_SH_bound[1]}_GLON${simulation.model.GLON_center}_GLAT${simulation.model.GLAT_center}_ROI${simulation.model.ROI_size}x${simulation.model.ROI_size}deg_pix${simulation.model.n_pix}_Ebins${simulation.model.N_E}.pt
-    train_size: 10000
-    store_size: 10000
+    path: /nfs/scratch/eliasd/udens/Fermi_uniform_SHMF_sim${simulation.store.store_size}_sub${simulation.model.N_SH_bound[0]}-${simulation.model.N_SH_bound[1]}_GLON${simulation.model.GLON_center}_GLAT${simulation.model.GLAT_center}_ROI${simulation.model.ROI_size}x${simulation.model.ROI_size}deg_pix${simulation.model.n_pix}_Ebins${simulation.model.N_E}.pt
+#     path: /Users/christopher/Documents/SBI-swyft-DMsubhalo-toymodel/udens/Fermi_uniform_SHMF_sim${simulation.store.store_size}_sub${simulation.model.N_SH_bound[0]}-${simulation.model.N_SH_bound[1]}_GLON${simulation.model.GLON_center}_GLAT${simulation.model.GLAT_center}_ROI${simulation.model.ROI_size}x${simulation.model.ROI_size}deg_pix${simulation.model.n_pix}_Ebins${simulation.model.N_E}.pt
+    train_size: 10
+    store_size: 10
 estimation:
   network:
     _target_: udens.ImgSegmNetwork
@@ -43,7 +44,7 @@ estimation:
     factor: 0.1
   accelerator: gpu
   batch_size: 16
-  max_epochs: 5
+  max_epochs: 30
   early_stopping:
     min_delta: 0.
     patience: 10
@@ -51,6 +52,6 @@ estimation:
 inference:
   interpreter:
     _target_: interpreter.interpret
-  n_infer: 1_000
+  n_infer: 1_0
 
   # bound: ./bound.pt
