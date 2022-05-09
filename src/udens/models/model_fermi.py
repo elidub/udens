@@ -421,7 +421,8 @@ class Fermi_DM_SH_model(sl.SwyftModel):
 
         #### Currently a simple 2D image is expected, hence this explicit selection
         #### Remove when adding flexibility to the pipeline!
-        return sl.SampleStore(mu=mu4[0])
+        #return sl.SampleStore(mu=mu4[0])
+        return sl.SampleStore(mu=mu4)
     
     def fast(self, d):
         if type(d["mu"]) == Array:
