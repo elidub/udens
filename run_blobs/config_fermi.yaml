@@ -1,0 +1,56 @@
+# SWYFT Lightning configuration script - using Hydra
+hydra:
+  run:
+    dir: ./
+tensorboard:
+  save_dir: ./lightning_fermi #_train${simulation.store.train_size}
+  name: poisson_noise_sub${simulation.model.N_SH_bound[0]}-${simulation.model.N_SH_bound[1]}_GLON${simulation.model.GLON_center}_GLAT${simulation.model.GLAT_center}_ROI${simulation.model.ROI_size}x${simulation.model.ROI_size}deg_pix${simulation.model.n_pix}_Ebins${simulation.model.N_E}_msc${estimation.network.n_msc}_sim${simulation.store.train_size}
+  version: 3
+load: False # set True to load in stead of analyse
+testload: False # set True to load test posteriors in stead of calculating them
+simulation:
+  model:
+    _target_: udens.models.model_fermi.Fermi_DM_SH_model
+    n_pix: 64
+    GLON_center: 0.0
+    GLAT_center: 0.0
+    ROI_size: 40.0
+    N_E: 1
+    E_min: 1.0
+    E_max: 5.0
+    N_SH_bound: [1, 5]
+    nsub_expect: 2.5
+    grid_low:  [7., -20., -20.]
+    grid_high: [10., 20.,  20.]
+    bounds:
+      # _target_: bounds.TorchBounds
+      # filename: ...
+  store:
+    path: /Users/christopher/Documents/SBI-swyft-DMsubhalo-toymodel/udens/Fermi_uniform_SHMF_sim${simulation.store.store_size}_sub${simulation.model.N_SH_bound[0]}-${simulation.model.N_SH_bound[1]}_GLON${simulation.model.GLON_center}_GLAT${simulation.model.GLAT_center}_ROI${simulation.model.ROI_size}x${simulation.model.ROI_size}deg_pix${simulation.model.n_pix}_Ebins${simulation.model.N_E}.pt
+    train_size: 10000
+    store_size: 10000
+estimation:
+  network:
+    _target_: udens.ImgSegmNetwork
+    n_msc: 4
+  hparams:
+  optimizer:
+    _target_: torch.optim.Adam
+    lr: 1.e-4
+  lr_scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    patience: 5
+    factor: 0.1
+  accelerator: gpu
+  batch_size: 16
+  max_epochs: 5
+  early_stopping:
+    min_delta: 0.
+    patience: 10
+  num_workers: 4
+inference:
+  interpreter:
+    _target_: interpreter.interpret
+  n_infer: 1_000
+
+  # bound: ./bound.pt
